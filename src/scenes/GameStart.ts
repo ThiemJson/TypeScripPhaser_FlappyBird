@@ -8,8 +8,5 @@ export default class GameStart extends Phaser.Scene {
   }
   create() {
     this.add.image(0, 0, TextureKeys.PipeGreen).setOrigin(0, 0);
-    this.add
-      .tileSprite(0, 0, this.scale.width, this.scale.height, TextureKeys.BackgroundDay)
-      .setOrigin(0);
   }
 }

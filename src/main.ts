@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import GameBackground from './scenes/GameBackground';
 import GameStart from './scenes/GameStart';
 import Preloader from './scenes/Preloader';
 import Waiting from "./scenes/Waitting";
@@ -17,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
 // 	  zoom: 1 / window.devicePixelRatio
 //   },
 
-  scene: [Preloader,Waiting, GameStart],
+  scene: [Preloader,Waiting,GameBackground, GameStart],
 };
 
 export default new Phaser.Game(config);

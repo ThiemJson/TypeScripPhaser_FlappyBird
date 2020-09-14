@@ -42,7 +42,7 @@ export default class Preloader extends Phaser.Scene {
   /**
    * Create Animation
    */
-  create() {
+  create() : void {
       this.scene.start(SceneKeys.Waiting);
   }
 }

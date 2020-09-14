@@ -15,7 +15,10 @@ export default class Waiting extends Phaser.Scene {
     //   .tileSprite(0, 0, this.width, this.height, TextureKeys.BackgroundDay)
     //   .setOrigin(0);
     //bg.setScale(this.scale.width / bg.width);
- 
+    this.startScene();
+  }
+  startScene(): void {
+    this.scene.start(SceneKeys.GameBackground);
     this.scene.start(SceneKeys.GameStart);
   }
 }
