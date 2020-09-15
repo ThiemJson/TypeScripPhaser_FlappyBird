@@ -11,12 +11,10 @@ const config: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 200 },
+      gravity: { y:200 },
+      debug: true
     },
   },
-//   scale: {
-// 	  zoom: 1 / window.devicePixelRatio
-//   },
 
   scene: [Preloader,Waiting,GameBackground, GameStart],
 };
