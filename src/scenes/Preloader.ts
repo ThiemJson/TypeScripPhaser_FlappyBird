@@ -11,6 +11,7 @@ export default class Preloader extends Phaser.Scene {
    * Load assets
    */
   preload() {
+    
     //Load background
     this.load.image(TextureKeys.BackgroundDay, "background/background-day.png");
     this.load.image(

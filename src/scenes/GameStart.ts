@@ -1,25 +1,29 @@
 import Phaser from "phaser";
 import SceneKeys from "~/const/SceneKeys";
-import TextureKeys from "~/const/TextureKeys";
 import Bird from "~/game/Bird";
-import Numbers from "~/game/Number";
-import PipeTop from "~/game/PipeTop";
+import Pipe from "~/game/Pipe";
 
 export default class GameStart extends Phaser.Scene {
+  /**Bird sprite ( see more in game folder) */
   private Bird!: Bird;
-  private list_of_pipe!: PipeTop[];
-  private score: number = 0;
-  private FirstPipe = 552;
-  // private scoreImage1!: Numbers;
-  // private scoreImage2!: Numbers;
-  // private scoreImage3!: Numbers;
+
+  /**Array of Pipe ( has 10 pipe) */
+  private ListOfPipe!: Pipe[];
+
+  /**Range of pipe.x ( next range to get point ) */
+  private defaultRange = 552;
+  /**Default score */
+  private score = 0;
+
+  /**Score image display */
   private scoreImage1!: Phaser.GameObjects.Image;
   private scoreImage2!: Phaser.GameObjects.Image;
   private scoreImage3!: Phaser.GameObjects.Image;
-  private defaultRange = 552;
+
   constructor() {
     super(SceneKeys.GameStart);
-    console.log("constructor GameStart !");
+
+    //Set default score value
     this.score = 0;
   }
   create() {
@@ -27,12 +31,11 @@ export default class GameStart extends Phaser.Scene {
     this.score = 0;
     this.defaultRange = 552;
 
-    
     //Add bird
     this.Bird = new Bird(this, 100, 100);
     this.add.existing(this.Bird);
 
-    //Set bound of word;
+    //Set bounds of word;
     this.physics.world.setBounds(
       0,
       0,
@@ -53,13 +56,15 @@ export default class GameStart extends Phaser.Scene {
       Phaser.Math.MAX_SAFE_INTEGER,
       this.scale.height
     );
+
     //SpawnPipe
     this.spawnPipe();
-    //Overlab
+
+    /**Overlap between Bird and Pipe */
     this.physics.add.overlap(
-      this.list_of_pipe,
+      this.ListOfPipe,
       this.Bird,
-      this.overlap_pipe_bird,
+      this.overlapPipeBird,
       undefined,
       this
     );
@@ -68,11 +73,12 @@ export default class GameStart extends Phaser.Scene {
     this.spawnScore();
   }
 
-  //Overlap between Bird and Pipe
-  overlap_pipe_bird(): void {
-    const bird = this.Bird;
+  /**Overlap between Bird and Pipe */
+  overlapPipeBird(): void {
     this.Bird.dead();
   }
+
+  /**update function of this Scene */
   update() {
     if (this.Bird.x > this.defaultRange) {
       this.score++;
@@ -82,10 +88,8 @@ export default class GameStart extends Phaser.Scene {
     this.respawnPipe();
   }
 
-  /**
-   * show score
-   */
-  spawnScore():void{
+  /**This function help to show score image in first time (when the Scence start), add image to screen */
+  spawnScore(): void {
     this.scoreImage1 = this.add
       .image(this.scale.width * 0.1, this.scale.height * 0.2, "0")
       .setOrigin(0)
@@ -98,60 +102,79 @@ export default class GameStart extends Phaser.Scene {
       .image(this.scale.width * 0.1 + 10, this.scale.height * 0.5, "2")
       .setOrigin(0)
       .setScrollFactor(0);
+
+    //The score begin at 0 point, unvisiable unused score image
     this.scoreImage2.setVisible(false);
     this.scoreImage3.setVisible(false);
   }
-  /**
-   * Spawn Pipe
-   */
+
+  /**this function help to spawn Pipe in First time ( when the Scene start ) */
   spawnPipe(): void {
-    this.list_of_pipe = [];
+    //Set default list of pipe
+    this.ListOfPipe = [];
+
+    //Set first possiton for first Pipe
     let scrollX = 500;
+
     for (let i = 0; i < 5; i++) {
-      let height = Phaser.Math.Between(100, this.scale.height - 150 - 100);
-      const item1 = new PipeTop(this, scrollX, 0, true, height);
-      const item2 = new PipeTop(
+      //Get random height of Top Pipe
+      const height = Phaser.Math.Between(100, this.scale.height - 150 - 100);
+
+      //Define Pipe on Top ( get height )
+      const PipeTop = new Pipe(this, scrollX, 0, true, height);
+
+      //Define Pipe on Bottm ( height = height of sceen - height of PipeTop - spacebetween )
+      const PipeBottom = new Pipe(
         this,
         scrollX,
         height + 150,
         false,
         this.scale.height - height - 150
       );
-      this.add.existing(item1);
-      this.add.existing(item2);
-      this.list_of_pipe.push(item1);
-      this.list_of_pipe.push(item2);
+
+      this.add.existing(PipeTop);
+      this.add.existing(PipeBottom);
+      this.ListOfPipe.push(PipeTop);
+      this.ListOfPipe.push(PipeBottom);
+
+      //Icredien next possion for orther Pipe
       scrollX += 150;
     }
   }
 
-  /**
-   * Update score and respawn pipe
-   */
+  /**Update score and respawn pipe */
   respawnPipe(): void {
-    // Change score
+    // get possion of main camera , the possion is coner of Top Left
     const scrollX = this.cameras.main.scrollX;
-    this.list_of_pipe.forEach((pipe, index) => {
+
+    // replace possion of Pipe when it has dissappear of Screen
+    this.ListOfPipe.forEach((pipe) => {
+      // Nevermind for 50 (its ok :))) )
       if (pipe.x + pipe.width + 50 < scrollX) {
         const body = pipe.body as Phaser.Physics.Arcade.Body;
-        pipe.x += 150 * 5 + 4 * pipe.width + 50;
+
+        // replace possion Body of pipe ( maybe reference Physic body)
+        pipe.x += 150 * 5 + 4 * pipe.width;
         body.x = pipe.x - body.width * 0.5;
       }
     });
   }
 
-  /**
-   * Show Score
-   */
+  /** Respawn the score when Bird pass a Pipe*/
   showScore() {
+    //Convert score (number) to array of number ( string) and split it
     const scoreString = this.score.toString().split("");
+
+    //When score lowerThan 10
     if (scoreString.length == 1) {
       this.scoreImage1
         .setTexture(scoreString[0])
         .setX(this.scale.width * 0.1)
         .setY(this.scale.height * 0.1)
         .setScrollFactor(0);
-    } else if (scoreString.length == 2) {
+    }
+    //When score lowerThan 100
+    else if (scoreString.length == 2) {
       if (this.score == 10) {
         this.scoreImage2.setVisible(true);
       }
@@ -165,7 +188,9 @@ export default class GameStart extends Phaser.Scene {
         .setX(this.scale.width * 0.1 + 20)
         .setY(this.scale.height * 0.1)
         .setScrollFactor(0);
-    } else if (scoreString.length == 3) {
+    } 
+    //When score lowerThan 1000
+    else if (scoreString.length == 3) {
       if (this.score == 100) {
         this.scoreImage3.setVisible(true);
       }

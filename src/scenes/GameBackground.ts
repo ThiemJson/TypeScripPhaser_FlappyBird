@@ -4,8 +4,8 @@ import TextureKeys from "~/const/TextureKeys";
 export default class GameBackground extends Phaser.Scene {
   constructor() {
     super(SceneKeys.GameBackground);
-    console.log("constructor Background !");
   }
+  /**Add background */
   create(): void {
     this.add
       .tileSprite(
