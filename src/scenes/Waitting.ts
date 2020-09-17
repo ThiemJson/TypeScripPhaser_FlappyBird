@@ -5,7 +5,6 @@ import TextureKeys from "~/const/TextureKeys";
 export default class Waiting extends Phaser.Scene {
   private cursor!: Phaser.Types.Input.Keyboard.CursorKeys;
   constructor() {
-    console.log("constructor Waitting !");
     super(SceneKeys.Waiting);
     
   }
@@ -16,8 +15,6 @@ export default class Waiting extends Phaser.Scene {
 
   update() {
     this.input.keyboard.once("keydown-SPACE", () => {
-      // this.scene?.stop(SceneKeys.GameStart());
-      // this.scene?.stop(SceneKeys.GameBackground);
       this.startScene();
     });
   }

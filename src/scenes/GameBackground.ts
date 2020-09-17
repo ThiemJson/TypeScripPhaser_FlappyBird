@@ -14,7 +14,7 @@ export default class GameBackground extends Phaser.Scene {
         this.scale.width,
         this.scale.height,
         TextureKeys.BackgroundDay
-      )
+      ) 
       .setOrigin(0);
   }
 }

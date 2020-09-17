@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import SceneKeys from "~/const/SceneKeys";
 import Bird from "~/game/Bird";
 import Pipe from "~/game/Pipe";
@@ -26,6 +25,7 @@ export default class GameStart extends Phaser.Scene {
     //Set default score value
     this.score = 0;
   }
+
   create() {
     //Reset score and range:
     this.score = 0;
@@ -188,7 +188,7 @@ export default class GameStart extends Phaser.Scene {
         .setX(this.scale.width * 0.1 + 20)
         .setY(this.scale.height * 0.1)
         .setScrollFactor(0);
-    } 
+    }
     //When score lowerThan 1000
     else if (scoreString.length == 3) {
       if (this.score == 100) {
